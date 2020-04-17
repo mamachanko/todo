@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mysql
+    url: jdbc:mysql://localhost:3306/todo
     password: s3cr3tz
     username: root
     driver-class-name: com.mysql.jdbc.Driver
@@ -9,4 +9,4 @@ spring:
       base-path: /api
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate

@@ -6,7 +6,7 @@ plugins {
 
 group = 'io.github.mamachanko'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '14'
+sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
@@ -24,6 +24,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	compile  "org.flywaydb:flyway-core:6.3.3"
+
 	compileOnly 'org.projectlombok:lombok'
 
 	runtimeOnly 'mysql:mysql-connector-java'
@@ -33,6 +35,8 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	implementation platform('org.testcontainers:testcontainers-bom:1.13.0')
+	testImplementation('org.testcontainers:mysql')
 }
 
 test {
