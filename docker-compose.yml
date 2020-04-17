@@ -8,3 +8,31 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: s3cr3tz
       MYSQL_DATABASE: todo
+
+  api:
+    image: openjdk:11.0.6
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./api/build/libs:/src
+      - ./scripts:/scripts
+    working_dir: /src
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/todo
+    command: /scripts/wait db:3306 -- java -jar todo-api-0.0.1-SNAPSHOT.jar
+    depends_on:
+      - db
+
+  client:
+    image: node:11.13.0
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./client:/src
+      - ./scripts:/scripts
+    working_dir: /src
+    environment:
+      API_BASE_URL: $API_BASE_URL
+    command: yarn run serve --port 8080
+    depends_on:
+      - api
