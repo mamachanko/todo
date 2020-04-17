@@ -3,8 +3,8 @@ A client build with Typescript and Vue and an API build with Java and Spring Boo
 
 ## todos (oh, the irony)
  * [ ] update ci docker image to use dind (see Spring Boot for inspiration)
- * [ ] simple ship script
- * [ ] integrate e2e into ship script
+ * [x] simple ship script
+ * [x] integrate e2e into ship script
  * [ ] fail ship script on local changes
  * [ ] fail ship script if behind upstream
  * [ ] auth w/ (embedded) ldap
