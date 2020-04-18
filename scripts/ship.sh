@@ -4,33 +4,53 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-echo ""
-echo "👷🏻‍♀️ let's build"
-echo ""
+main() {
+  build
+  e2e
+  push
+  celebrate
+}
 
-./build-client.sh
-./build-api.sh
+build() {
+  echo ""
+  echo "👷🏻‍♀️ let's build"
+  echo ""
 
+  ./build-client.sh
+  ./build-api.sh
+}
 
-echo ""
-echo "🧪️ let's e2e"
-echo ""
+e2e() {
+  echo ""
+  echo "🧪️ let's e2e"
+  echo ""
 
-export API_BASE_URL=http://api:8080
+  export API_BASE_URL=http://api:8080
 
-docker-compose down --volumes --remove-orphans
-docker-compose up --detach
-docker-compose exec client /scripts/wait ${API_BASE_URL/http:\/\//} --timeout=120 -- echo good to go
-./e2e.sh
-docker-compose down --volumes --remove-orphans
+  docker-compose down --volumes --remove-orphans
+  docker-compose up --detach
+  docker-compose exec client /scripts/wait ${API_BASE_URL/http:\/\//} --timeout=120 -- echo good to go
 
-echo ""
-echo "🆙 let's push"
-echo ""
+  ./e2e.sh
 
-git push
+  docker-compose down --volumes --remove-orphans
+}
 
+push() {
+  echo ""
+  echo "🆙 let's push"
+  echo ""
 
-echo ""
-echo "🚢 successfully shipped"
-echo ""
+  git push
+}
+
+celebrate() {
+  echo ""
+  echo "🚢 successfully shipped:"
+  echo "🍾"
+  echo "🍾     $(git show -s --format=oneline @)"
+  echo "🍾"
+  echo ""
+}
+
+main
