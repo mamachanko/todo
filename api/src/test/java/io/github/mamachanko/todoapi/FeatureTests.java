@@ -1,18 +1,12 @@
 package io.github.mamachanko.todoapi;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(
         webEnvironment = WebEnvironment.RANDOM_PORT,
@@ -26,23 +20,15 @@ public class FeatureTests {
     @LocalServerPort
     private int serverPort;
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
-
-    @Autowired
-    private TodoRepository todoRepository;
-
     @Test
-    void shouldExposeTodos() {
-        todoRepository.save(new Todo());
-
-        ResponseEntity<Map<String, Object>> todosResponse = testRestTemplate.exchange(
-                "/api/todos",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {
-                });
-
-        assertThat(todosResponse.getBody().get("_embedded")).isNotNull();
+    void andNowWithRestAssured() {
+        given()
+                .log().all()
+                .port(serverPort)
+                .when()
+                .get("/api/todos")
+                .then()
+                .statusCode(200)
+                .body("_embedded.todos.size()", is(10));
     }
 }
