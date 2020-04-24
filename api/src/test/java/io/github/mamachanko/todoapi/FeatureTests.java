@@ -7,6 +7,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 @SpringBootTest(
         webEnvironment = WebEnvironment.RANDOM_PORT,
@@ -21,7 +22,7 @@ public class FeatureTests {
     private int serverPort;
 
     @Test
-    void andNowWithRestAssured() {
+    void exposesTodos() {
         given()
                 .log().all()
                 .port(serverPort)
@@ -29,6 +30,6 @@ public class FeatureTests {
                 .get("/api/todos")
                 .then()
                 .statusCode(200)
-                .body("_embedded.todos.size()", is(10));
+                .body("_embedded.todos.size()", not(is(0)));
     }
 }

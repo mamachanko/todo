@@ -25,15 +25,7 @@ e2e() {
   echo "🧪️ let's e2e"
   echo ""
 
-  export API_BASE_URL=http://api:8080
-
-  docker-compose down --volumes --remove-orphans
-  docker-compose up --detach
-  docker-compose exec client /scripts/wait ${API_BASE_URL/http:\/\//} --timeout=120 -- echo good to go
-
-  ./e2e.sh
-
-  docker-compose down --volumes --remove-orphans
+  ./e2e-local.sh
 }
 
 push() {
